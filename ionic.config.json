@@ -1,0 +1,7 @@
+{
+  "name": "Alarma",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
