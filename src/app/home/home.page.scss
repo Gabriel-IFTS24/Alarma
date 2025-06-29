@@ -25,3 +25,25 @@
 #container a {
   text-decoration: none;
 }
+
+
+
+ion-datetime {
+  --background: --ion-background-color-step-50;
+  --background-rgb: --ion-background-color-step-50;
+  --wheel-highlight-background: rgb(218, 216, 255);
+  --wheel-highlight-border-radius: 48px;
+  --wheel-fade-background-rgb: --ion-background-color-step-50;
+}
+
+ion-datetime::part(wheel-item) {
+  color: var(--color);
+}
+
+ion-datetime::part(wheel-item active) {
+  color: blue;
+}
+
+ion-picker{
+  margin-right: 5%;
+}
