@@ -4,6 +4,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInp
 import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
+import { ToastController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-home',
@@ -17,6 +19,7 @@ export class HomePage {
   
   constructor(private alarmaService: AlarmaService,
     private notificacionesService: NotificacionesService,
+    private toastController: ToastController
   ) {
     this.alarmas = this.alarmaService.obtenerAlarmas(); 
   }
@@ -44,7 +47,7 @@ export class HomePage {
     this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
 
     if (await this.notificacionesService.pedirPermisoNotificaciones()){
-      this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(Date.now() + 1000))
+      this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
     }
 
     this.nuevaDescripcion=''; // Blanqueo el campo nuevaAlarma.
@@ -59,4 +62,15 @@ export class HomePage {
       this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
       }
     }
+
+    
+  async testToast(){
+    const toast = await this.toastController.create({
+      message: 'Prueba!',
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
+    
 }
