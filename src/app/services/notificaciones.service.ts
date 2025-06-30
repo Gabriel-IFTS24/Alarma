@@ -27,7 +27,8 @@ export class NotificacionesService {
         id: new Date().getTime(),
         schedule: {at: timer},
         actionTypeId:'',
-        extra: null
+        extra: null,
+        sound: 'res://ding'
       }]
     })
   }

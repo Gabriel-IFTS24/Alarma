@@ -5,6 +5,7 @@ import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -23,7 +24,7 @@ export class HomePage {
 
   alarmas: Alarma[]
   nuevaDescripcion = ''; 
-  nuevoTimer = new Date;
+  nuevoTimer = new Date();
   nuevaAlarmaMinutos = ''; // Opcion 2
   nuevaAlarmaSegundos = ''; // Opcion 2
   
@@ -37,18 +38,18 @@ export class HomePage {
     const nuevaAlarma: Alarma = { 
       id: 0,
       descripcion: this.nuevaDescripcion,
-      timer: this.nuevoTimer
+      timer: new Date(this.nuevoTimer)
     }
 
-    this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
+    await this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
 
     if (await this.notificacionesService.pedirPermisoNotificaciones()){
-      this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, this.nuevoTimer)
+      await this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
     }
 
     this.nuevaDescripcion=''; // Blanqueo el campo nuevaAlarma.
-
-    this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
+    
+    this.alarmas = await this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
   }
 
   eliminarAlarma(id: number){
