@@ -55,4 +55,11 @@ eliminarAlarma(id:number){
   this.guardarAlarmas(alarmas); // llamo a guardarAlarmas con el array modificado.
   }
 
+eliminarTodasAlarmas() {
+  // guardo un array vacío en localStorage, borrando todo lo que tiene, la logica es que reemplazo el contenido del localStorage con un array vacio
+  localStorage.setItem('alarmas', JSON.stringify([]));
+  // También reseteo el array interno del servicio
+  this.alarmas = [];
+}
+
 }

@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption} from '@ionic/angular/standalone';
+// import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption} from '@ionic/angular/standalone';
 import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
 import { ToastController } from '@ionic/angular';
 
+// import { IonFooter } from '@ionic/angular';
+import { IonicModule} from "@ionic/angular"
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption],
+  // imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption, IonFooter],
+  imports: [FormsModule, ReactiveFormsModule, IonicModule],
+  
 })
 export class HomePage {
   
@@ -73,4 +77,14 @@ export class HomePage {
     await toast.present();
   }
     
+    async borrarTodasLasAlarmas() {
+    const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); //estoy usando el async porque el perm de notificaciones tmb es async
+
+    if (confirmacion) {
+      // llamo al metodo para eliminar
+      this.alarmaService.eliminarTodasAlarmas();
+      // cargo las alarmas
+      this.alarmas = this.alarmaService.obtenerAlarmas();
+      }
+    }
 }
