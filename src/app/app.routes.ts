@@ -10,4 +10,9 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
+  {
+    path: 'cronometro',
+    loadComponent: () => import('./cronometro/cronometro.page').then( m => m.CronometroPage)
+  },
+
 ];
