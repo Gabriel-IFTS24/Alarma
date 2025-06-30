@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption} from '@ionic/angular/standalone';
+// import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption} from '@ionic/angular/standalone';
 import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
-import { IonFooter } from '@ionic/angular';
-
+// import { IonFooter } from '@ionic/angular';
+import { IonicModule} from "@ionic/angular"
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption],
+  // imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption, IonFooter],
+  imports: [FormsModule, ReactiveFormsModule, IonicModule],
+  
 })
 export class HomePage {
   
