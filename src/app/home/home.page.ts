@@ -33,6 +33,7 @@ export class HomePage {
   nuevoTimer = new Date();
   nuevaAlarmaMinutos = ''; // Opcion 2
   nuevaAlarmaSegundos = ''; // Opcion 2
+  alarmaEditada: Alarma | null = null; /* para almacenar la alarma que se esta editando */
   
   async agregarAlarma(){
     // let nuevoTimer = new Date() // Opcion 2
@@ -41,14 +42,21 @@ export class HomePage {
     // nuevoTimer.setSeconds(nuevoTimer.getSeconds() + Number(this.nuevaAlarmaSegundos)); // Opcion 2
 
     // Instancio Alarma con los valores de la vista para pasarle al método guardarAlarma
-    
-    const nuevaAlarma: Alarma = { 
-      id: Number(0),
-      descripcion: this.nuevaDescripcion,
-      timer: new Date(this.nuevoTimer)
+    if(this.alarmaEditada){
+      this.alarmaEditada.descripcion = this.nuevaDescripcion;
+      this.alarmaEditada.timer = new Date(this.nuevoTimer);
+      this.alarmaService.guardarAlarma(this.alarmaEditada);
+      this.alarmaEditada = null;
+      console.log("Alarma Modificada");
+    } else {
+      const nuevaAlarma: Alarma = { 
+        id: Number(0),
+        descripcion: this.nuevaDescripcion,
+        timer: new Date(this.nuevoTimer)
+      }
+      this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
     }
     
-    this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
 
     if (await this.notificacionesService.pedirPermisoNotificaciones()){
       this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
@@ -87,4 +95,18 @@ export class HomePage {
       this.alarmas = this.alarmaService.obtenerAlarmas();
       }
     }
+
+    editarAlarma(alarma: Alarma){
+      this.alarmaEditada = { ...alarma };
+      this.nuevaDescripcion = alarma.descripcion || '';
+      this.nuevoTimer = alarma.timer ? new Date(alarma.timer) : new Date();
+      console.log(`Editando alarma con ID: ${alarma.id}`);
+    }
+
+    cancelarEdicion() {
+    this.alarmaEditada = null;
+    this.nuevaDescripcion = '';
+    this.nuevoTimer = new Date();
+    console.log('Edición cancelada.');
+  }
 }
