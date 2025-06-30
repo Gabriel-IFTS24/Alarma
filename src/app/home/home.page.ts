@@ -5,7 +5,6 @@ import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -17,7 +16,7 @@ export class HomePage {
   // Conceptualmente es muy parecido a la app de tareas de la clase 20, mezclado con lo que hicimos para Front/Magalí.
   
   constructor(private alarmaService: AlarmaService,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
   ) {
     this.alarmas = this.alarmaService.obtenerAlarmas(); 
   }
@@ -35,21 +34,23 @@ export class HomePage {
     // nuevoTimer.setSeconds(nuevoTimer.getSeconds() + Number(this.nuevaAlarmaSegundos)); // Opcion 2
 
     // Instancio Alarma con los valores de la vista para pasarle al método guardarAlarma
+    
     const nuevaAlarma: Alarma = { 
-      id: 0,
+      id: Number(0),
       descripcion: this.nuevaDescripcion,
       timer: new Date(this.nuevoTimer)
     }
-
-    await this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
+    
+    this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
 
     if (await this.notificacionesService.pedirPermisoNotificaciones()){
-      await this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
+      this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(Date.now() + 1000))
     }
 
     this.nuevaDescripcion=''; // Blanqueo el campo nuevaAlarma.
     
-    this.alarmas = await this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
+    this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
+
   }
 
   eliminarAlarma(id: number){

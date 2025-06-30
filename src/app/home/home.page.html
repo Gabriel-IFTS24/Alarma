@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>
 
-      Listado de alarmas V2.1
+      Listado de alarmas V2.4
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -58,7 +58,7 @@
   <ion-list>
     @for(alarma of alarmas; track alarma.id ){
       <ion-item>
-        {{ alarma.id }}
+        {{ alarma.id }} - 
         {{ alarma.descripcion }}
         <ion-button (click)="eliminarAlarma(alarma.id || 0)" slot="end">
           ❌

@@ -24,7 +24,7 @@ export class NotificacionesService {
       notifications: [{
         title: titulo,
         body: cuerpo,
-        id: new Date().getTime(),
+        id: parseInt(Date.now().toString().slice(-6), 10),
         schedule: {at: timer},
         actionTypeId:'',
         extra: null,
