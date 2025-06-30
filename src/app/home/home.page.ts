@@ -4,12 +4,14 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInp
 import { AlarmaService } from '../services/alarma.service';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { Alarma } from '../models/alarma';
+import { IonFooter } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption],
+  imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption, IonFooter],
 })
 export class HomePage {
   
@@ -55,6 +57,16 @@ export class HomePage {
     if (confirm(`¿Está seguro que desea eliminar la alarma ${id}?`)) {
       this.alarmaService.eliminarAlarma(id);
       this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
+      }
+    }
+    async borrarTodasLasAlarmas() {
+    const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); //estoy usando el async porque el perm de notificaciones tmb es async
+
+    if (confirmacion) {
+      // llamo al metodo para eliminar
+      this.alarmaService.eliminarTodasAlarmas();
+      // cargo las alarmas
+      this.alarmas = this.alarmaService.obtenerAlarmas();
       }
     }
 }
