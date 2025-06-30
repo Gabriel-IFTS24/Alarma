@@ -50,12 +50,21 @@
       </ion-picker-column>
     </ion-picker> -->
     </div>
+    @if (alarmaEditada) {
+      <ion-button (click)="agregarAlarma()" [disabled]="!nuevaDescripcion">
+        Guardar Cambios
+      </ion-button>
+      <ion-button (click)="cancelarEdicion()" color="danger">
+        Cancelar
+      </ion-button>
+    } @else {
+      <ion-button (click)="agregarAlarma()" [disabled]="!nuevaDescripcion">
+        <!-- {{ alarmaEditada ? '✏️' : '➕ '}} -->
+        {{ alarmaEditada ? 'Guardar Cambios' : 'Agregar Alarma' }}
+      </ion-button>
+
+    }
     
-    <ion-button (click)="agregarAlarma()" [disabled]="!nuevaDescripcion">
-      <!-- <ion-icon [name]="alarmaEditada ? 'save' : 'add'"></ion-icon> -->
-      <!-- {{ alarmaEditada ? '✏️' : '➕ '}} -->
-      {{ alarmaEditada ? 'Guardar Cambios' : 'Agregar Alarma' }}
-    </ion-button>
   </ion-item>
 
   <ion-list>
@@ -63,12 +72,11 @@
       <ion-item>
         {{ alarma.id }} - 
         {{ alarma.descripcion }}
-        <ion-button (click)="editarAlarma(alarma)" slot="end">
-          <!-- <ion-icon name="create"></ion-icon> icono de editar no funciona-->
+        <ion-button (click)="editarAlarma(alarma)" slot="end" [disabled]="alarmaEditada">
           <!-- Modificar -->
-           ✏️
+          ✏️
         </ion-button>
-        <ion-button (click)="eliminarAlarma(alarma.id || 0)" slot="end">
+        <ion-button (click)="eliminarAlarma(alarma.id || 0)" slot="end" [disabled]="alarmaEditada">
           ❌
         </ion-button>
       </ion-item>
@@ -78,7 +86,7 @@
   <ion-footer>  <!-- es para que el boton este al final de la pantalla -->
     <ion-toolbar>
       
-      <ion-button expand="block" color="danger" (click)="borrarTodasLasAlarmas()" class="ion-margin">
+      <ion-button expand="block" color="danger" (click)="borrarTodasLasAlarmas()" class="ion-margin" [disabled]="alarmaEditada">
         Borrar Todas las Alarmas
       </ion-button>
     </ion-toolbar>

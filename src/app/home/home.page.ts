@@ -41,14 +41,20 @@ export class HomePage {
     // nuevoTimer.setMinutes(nuevoTimer.getMinutes() + Number(this.nuevaAlarmaMinutos)); // Opcion 2
     // nuevoTimer.setSeconds(nuevoTimer.getSeconds() + Number(this.nuevaAlarmaSegundos)); // Opcion 2
 
-    // Instancio Alarma con los valores de la vista para pasarle al método guardarAlarma
+    
+    // Si estoy editando una alarma existente (alarmaEditada no es null)
     if(this.alarmaEditada){
+      // Actualizo la descripcion y el timer con los nuevos valores
       this.alarmaEditada.descripcion = this.nuevaDescripcion;
       this.alarmaEditada.timer = new Date(this.nuevoTimer);
+
+      // Guardo la alarma con los cambios
       this.alarmaService.guardarAlarma(this.alarmaEditada);
+
+      // Al terminar la modificacion la vuelvo a null
       this.alarmaEditada = null;
-      console.log("Alarma Modificada");
     } else {
+      // Instancio Alarma con los valores de la vista para pasarle al método guardarAlarma
       const nuevaAlarma: Alarma = { 
         id: Number(0),
         descripcion: this.nuevaDescripcion,
@@ -72,8 +78,8 @@ export class HomePage {
     if (confirm(`¿Está seguro que desea eliminar la alarma ${id}?`)) {
       this.alarmaService.eliminarAlarma(id);
       this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
-      }
     }
+  }
 
     
   async testToast(){
@@ -86,18 +92,18 @@ export class HomePage {
   }
     
     async borrarTodasLasAlarmas() {
-    const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); //estoy usando el async porque el perm de notificaciones tmb es async
-
-    if (confirmacion) {
-      // llamo al metodo para eliminar
-      this.alarmaService.eliminarTodasAlarmas();
-      // cargo las alarmas
-      this.alarmas = this.alarmaService.obtenerAlarmas();
+      const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); //estoy usando el async porque el perm de notificaciones tmb es async
+  
+      if (confirmacion) {
+        // llamo al metodo para eliminar
+        this.alarmaService.eliminarTodasAlarmas();
+        // cargo las alarmas
+        this.alarmas = this.alarmaService.obtenerAlarmas();
       }
     }
 
     editarAlarma(alarma: Alarma){
-      this.alarmaEditada = { ...alarma };
+      this.alarmaEditada = { ...alarma }; /* creo una copia del objeto alarma para no modificar el original*/
       this.nuevaDescripcion = alarma.descripcion || '';
       this.nuevoTimer = alarma.timer ? new Date(alarma.timer) : new Date();
       console.log(`Editando alarma con ID: ${alarma.id}`);
@@ -107,6 +113,6 @@ export class HomePage {
     this.alarmaEditada = null;
     this.nuevaDescripcion = '';
     this.nuevoTimer = new Date();
-    console.log('Edición cancelada.');
+    
   }
 }
