@@ -5,12 +5,13 @@ import { AlarmaService } from '../services/alarma.service';
 import { Alarma } from '../models/alarma';
 import { NotificacionesService } from '../services/notificaciones.service';
 import { ToastController } from '@ionic/angular';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [FormsModule, ReactiveFormsModule, IonicModule],
+  imports: [FormsModule, ReactiveFormsModule, IonicModule, DatePipe],
   
 })
 export class HomePage {

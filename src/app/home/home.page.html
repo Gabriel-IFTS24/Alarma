@@ -38,7 +38,7 @@
   <ion-list>
     @for(alarma of alarmas; track alarma.id ){
       <ion-item>
-        {{ alarma.id }} - 
+        {{ alarma.timer | date:'HH:mm' }} -
         {{ alarma.descripcion }}
         <ion-button (click)="editarAlarma(alarma)" slot="end" [disabled]="alarmaEditada">
           <!-- Modificar -->
