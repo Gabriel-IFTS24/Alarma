@@ -1,26 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption} from '@ionic/angular/standalone';
-import { AlarmaService } from '../services/alarma.service';
-import { NotificacionesService } from '../services/notificaciones.service';
-import { Alarma } from '../models/alarma';
-import { ToastController } from '@ionic/angular';
-
-// import { IonFooter } from '@ionic/angular';
 import { IonicModule} from "@ionic/angular"
+import { AlarmaService } from '../services/alarma.service';
+import { Alarma } from '../models/alarma';
+import { NotificacionesService } from '../services/notificaciones.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  // imports: [FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButton, IonInput, IonList, IonDatetime, IonPicker, IonPickerColumn, IonPickerColumnOption, IonFooter],
   imports: [FormsModule, ReactiveFormsModule, IonicModule],
   
 })
 export class HomePage {
-  
-  // Conceptualmente es muy parecido a la app de tareas de la clase 20, mezclado con lo que hicimos para Front/Magalí.
-  
+
   constructor(private alarmaService: AlarmaService,
     private notificacionesService: NotificacionesService,
     private toastController: ToastController
@@ -31,17 +25,10 @@ export class HomePage {
   alarmas: Alarma[]
   nuevaDescripcion = ''; 
   nuevoTimer = new Date();
-  nuevaAlarmaMinutos = ''; // Opcion 2
-  nuevaAlarmaSegundos = ''; // Opcion 2
-  alarmaEditada: Alarma | null = null; /* para almacenar la alarma que se esta editando */
+  alarmaEditada: Alarma | null = null; //Se utiliza para almacenar la alarma que se esta editando.
+  idNotificacion = 0; // Se utiliza para el id único de la notificación
   
   async agregarAlarma(){
-    // let nuevoTimer = new Date() // Opcion 2
-
-    // nuevoTimer.setMinutes(nuevoTimer.getMinutes() + Number(this.nuevaAlarmaMinutos)); // Opcion 2
-    // nuevoTimer.setSeconds(nuevoTimer.getSeconds() + Number(this.nuevaAlarmaSegundos)); // Opcion 2
-
-    
     // Si estoy editando una alarma existente (alarmaEditada no es null)
     if(this.alarmaEditada){
       // Actualizo la descripcion y el timer con los nuevos valores
@@ -49,7 +36,7 @@ export class HomePage {
       this.alarmaEditada.timer = new Date(this.nuevoTimer);
 
       // Guardo la alarma con los cambios
-      this.alarmaService.guardarAlarma(this.alarmaEditada);
+      this.idNotificacion = this.alarmaService.guardarAlarma(this.alarmaEditada);
 
       // Al terminar la modificacion la vuelvo a null
       this.alarmaEditada = null;
@@ -60,18 +47,32 @@ export class HomePage {
         descripcion: this.nuevaDescripcion,
         timer: new Date(this.nuevoTimer)
       }
-      this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
+
+      this.idNotificacion = this.alarmaService.guardarAlarma(nuevaAlarma); // Llamo al método para guardar alarmas con la nueva alarma.
     }
     
-
+    // Envio de la notificación. Primero pido los permisos y la schedulo.
     if (await this.notificacionesService.pedirPermisoNotificaciones()){
-      this.notificacionesService.mostrarNotificacion('Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
+      this.notificacionesService.guardarNotificacion(this.idNotificacion, 'Alarma', this.nuevaDescripcion, new Date(this.nuevoTimer))
     }
-
+    
     this.nuevaDescripcion=''; // Blanqueo el campo nuevaAlarma.
     
     this.alarmas = this.alarmaService.obtenerAlarmas(); // Actualizo la lista de alarmas.
+    
+  }
 
+  editarAlarma(alarma: Alarma){
+    this.alarmaEditada = { ...alarma }; // creo una copia del objeto alarma para no modificar el original
+    this.nuevaDescripcion = alarma.descripcion || '';
+    this.nuevoTimer = alarma.timer ? new Date(alarma.timer) : new Date();
+    console.log(`Editando alarma con ID: ${alarma.id}`);
+  }
+
+  cancelarEdicion() {
+    this.alarmaEditada = null;
+    this.nuevaDescripcion = '';
+    this.nuevoTimer = new Date();
   }
 
   eliminarAlarma(id: number){
@@ -81,38 +82,14 @@ export class HomePage {
     }
   }
 
-    
-  async testToast(){
-    const toast = await this.toastController.create({
-      message: 'Prueba!',
-      duration: 2000,
-      position: 'bottom',
-    });
-    await toast.present();
-  }
-    
-    async borrarTodasLasAlarmas() {
-      const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); //estoy usando el async porque el perm de notificaciones tmb es async
-  
-      if (confirmacion) {
-        // llamo al metodo para eliminar
-        this.alarmaService.eliminarTodasAlarmas();
-        // cargo las alarmas
-        this.alarmas = this.alarmaService.obtenerAlarmas();
-      }
-    }
+  async borrarTodasLasAlarmas() {
+    const confirmacion = confirm('¿Esta seguro de que deseas borrar TODAS las alarmas?'); 
 
-    editarAlarma(alarma: Alarma){
-      this.alarmaEditada = { ...alarma }; /* creo una copia del objeto alarma para no modificar el original*/
-      this.nuevaDescripcion = alarma.descripcion || '';
-      this.nuevoTimer = alarma.timer ? new Date(alarma.timer) : new Date();
-      console.log(`Editando alarma con ID: ${alarma.id}`);
+    if (confirmacion) {
+      // Llamo al método para eliminar y espero que termine para actualizar.
+      await this.alarmaService.eliminarTodasAlarmas();
+      // Cargo las alarmas después de la eliminación.
+      this.alarmas = this.alarmaService.obtenerAlarmas();
     }
-
-    cancelarEdicion() {
-    this.alarmaEditada = null;
-    this.nuevaDescripcion = '';
-    this.nuevoTimer = new Date();
-    
   }
 }

@@ -1,54 +1,23 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-
-      Listado de alarmas V2.4
+      Listado de alarmas
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-item>
-    <ion-input placeholder="Nueva alarma" [(ngModel)]="nuevaDescripcion">
+    <ion-input placeholder="Ingrese descripción de la nueva alarma" [(ngModel)]="nuevaDescripcion">
       <!-- linkeo la variable mediante el formModule -->
     </ion-input>
   </ion-item>
 
   <ion-item>
     <div  class="ion-text-center" style="width: 100%">
-    <!-- Opción 1 con datetime. No me gusta, queda muy grande y no veo forma de que me muestre sólo minutos y segundos -->
     <!-- https://ionicframework.com/docs/api/datetime -->
     <ion-datetime [(ngModel)]="nuevoTimer" presentation="time" [preferWheel]="true" displayFormat="mm:ss" hourCycle="h24" secondValues="0,10,20,30,40,50"></ion-datetime>
 
-
-    <!-- Opción 2 con un picker. No queda mucho mejor, pero al menos se pueden seleccionar segundos.
-     El tema es que hace que no se carguen automáticamente las alarmas y alguna veces tira unos errores respecto del value accesor
-    Sino la otra es hacer un pickerController.create que sería un picker "custom"-->
-    <!-- https://ionicframework.com/docs/api/picker -->
-
-    <!-- <ion-picker>
-      <ion-picker-column name="minutos" [(ngModel)]="nuevaAlarmaMinutos"> 
-        <ion-picker-column-option value="0">0</ion-picker-column-option>
-        <ion-picker-column-option value="1">1</ion-picker-column-option>
-        <ion-picker-column-option value="2">2</ion-picker-column-option>
-        <ion-picker-column-option value="3">3</ion-picker-column-option>
-        <ion-picker-column-option value="4">4</ion-picker-column-option>
-        <ion-picker-column-option value="5">5</ion-picker-column-option>
-        <div slot="suffix">'</div>
-      </ion-picker-column>
-    </ion-picker>
-
-    <ion-picker>
-      <ion-picker-column name="segundos" [(ngModel)]="nuevaAlarmaSegundos">
-        <ion-picker-column-option value="10">10</ion-picker-column-option>
-        <ion-picker-column-option value="20">20</ion-picker-column-option>
-        <ion-picker-column-option value="30">30</ion-picker-column-option>
-        <ion-picker-column-option value="40">40</ion-picker-column-option>
-        <ion-picker-column-option value="50">50</ion-picker-column-option>
-        <ion-picker-column-option value="60">60</ion-picker-column-option>
-        <div slot="suffix">''</div>
-      </ion-picker-column>
-    </ion-picker> -->
     </div>
     @if (alarmaEditada) {
       <ion-button (click)="agregarAlarma()" [disabled]="!nuevaDescripcion">
@@ -59,7 +28,6 @@
       </ion-button>
     } @else {
       <ion-button (click)="agregarAlarma()" [disabled]="!nuevaDescripcion">
-        <!-- ➕ -->
         Agregar Alarma
       </ion-button>
 
